@@ -204,26 +204,43 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-
+    function getParams() {
+      // Combine search + hash
+      let query = window.location.search;
+    
+      if (window.location.hash) {
+        query += "&" + window.location.hash.substring(1);
+      }
+    
+      return new URLSearchParams(query);
+    }
+    
+    const params = getParams();
+    
     const domain = params.get("domain") || "Unknown";
-    const category = params.get("category") || "Uncategorized";
-
+    const category = params.get("category") || params.get("categories") || "Uncategorized";
+    
     document.getElementById("domain").innerText = domain;
     document.getElementById("category").innerText = category;
-
+    
+    // Date/time
     document.getElementById("date").innerText =
       new Date().toLocaleString();
-
+    
+    // Email
     const email = "itops@coveredconnections.com";
     const subject = encodeURIComponent("Access Request: " + domain);
     const body = encodeURIComponent(
-      "Requesting access to:\n\nDomain: " + domain +
-      "\nCategory: " + category
+    `Requesting access to a blocked website:
+    
+    Domain: ${domain}
+    Category: ${category}
+    IP: ${params.get("ip") || "Unknown"}
+    Policy: ${params.get("policy") || "Unknown"}
+    Date: ${new Date().toLocaleString()}
+    
+    Please review.`
     );
-
-    document.getElementById("requestLink").href =
-      `mailto:${email}?subject=${subject}&body=${body}`;
   </script>
 
 </body>
