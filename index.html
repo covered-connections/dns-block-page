@@ -188,6 +188,8 @@
     <div class="details">
       <p><strong>Domain:</strong> <span id="domain">Loading...</span></p>
       <p><strong>Category:</strong> <span id="category">Loading...</span></p>
+      <p><strong>IP Address:</strong> <span id="ip">Loading...</span></p>
+      <p><strong>Policy:</strong> <span id="policy">Loading...</span></p>
       <p><strong>Date:</strong> <span id="date"></span></p>
     </div>
 
@@ -205,43 +207,56 @@
 
   <script>
     function getParams() {
-      // Combine search + hash
-      let query = window.location.search;
-    
-      if (window.location.hash) {
-        query += "&" + window.location.hash.substring(1);
+      let query = "";
+  
+      if (window.location.search) {
+        query += window.location.search.substring(1);
       }
-    
+  
+      if (window.location.hash) {
+        if (query.length > 0) query += "&";
+        query += window.location.hash.substring(1);
+      }
+  
       return new URLSearchParams(query);
     }
-    
+  
     const params = getParams();
-    
+  
     const domain = params.get("domain") || "Unknown";
-    const category = params.get("category") || params.get("categories") || "Uncategorized";
-    
+    const rawCategory = params.get("category") || params.get("categories");
+    const category = rawCategory ? decodeURIComponent(rawCategory) : "Uncategorized";
+  
+    const ip = params.get("ip") || "Unknown";
+    const policy = params.get("policy") || "Unknown";
+  
     document.getElementById("domain").innerText = domain;
     document.getElementById("category").innerText = category;
-    
-    // Date/time
+    document.getElementById("ip").innerText = ip;
+    document.getElementById("policy").innerText = policy;
+  
     document.getElementById("date").innerText =
       new Date().toLocaleString();
-    
-    // Email
+  
+    // ✅ FIX: actually assign the email link
     const email = "itops@coveredconnections.com";
     const subject = encodeURIComponent("Access Request: " + domain);
+  
     const body = encodeURIComponent(
-    `Requesting access to a blocked website:
-    
-    Domain: ${domain}
-    Category: ${category}
-    IP: ${params.get("ip") || "Unknown"}
-    Policy: ${params.get("policy") || "Unknown"}
-    Date: ${new Date().toLocaleString()}
-    
-    Please review.`
+  `Requesting access to a blocked website:
+  
+  Domain: ${domain}
+  Category: ${category}
+  IP: ${ip}
+  Policy: ${policy}
+  Date: ${new Date().toLocaleString()}
+  
+  Please review.`
     );
-  </script>
+
+  document.getElementById("requestLink").href =
+    `mailto:${email}?subject=${subject}&body=${body}`;
+</script>
 
 </body>
 </html>
