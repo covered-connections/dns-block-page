@@ -81,25 +81,47 @@
       color: #4b5563;
     }
 
-    .details {
+    /* DASHBOARD GRID */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
       margin: 25px 0;
-      text-align: center;
+    }
+
+    .card {
       background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
-      padding: 20px;
-      border-radius: 10px;
-      font-size: 14px;
       border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      transition: all 0.2s ease;
     }
 
-    .details p {
-      margin: 8px 0;
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
     }
 
-    .details strong {
-      display: inline-block;
-      width: 100px;
+    .card span {
+      display: block;
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
     }
 
+    .card strong {
+      font-size: 16px;
+      color: #111827;
+      word-break: break-word;
+    }
+
+    .card.full {
+      grid-column: span 2;
+    }
+
+    /* Buttons */
     .actions {
       margin-top: 30px;
     }
@@ -134,7 +156,7 @@
       background: #d1d5db;
     }
 
-    /* NEW: Contact box */
+    /* Contact box */
     .contact {
       margin-top: 25px;
       padding: 15px;
@@ -171,6 +193,17 @@
         transform: translateY(0);
       }
     }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card.full {
+        grid-column: span 1;
+      }
+    }
   </style>
 </head>
 
@@ -194,12 +227,34 @@
     <h1>Website Restricted</h1>
     <p>This request has been blocked in accordance with your organization's security policies.</p>
 
-    <div class="details">
-      <p><strong>Domain:</strong> <span id="domain">Loading...</span></p>
-      <p><strong>Category:</strong> <span id="category">Loading...</span></p>
-      <p><strong>IP Address:</strong> <span id="ip">Loading...</span></p>
-      <p><strong>Policy:</strong> <span id="policy">Loading...</span></p>
-      <p><strong>Date:</strong> <span id="date"></span></p>
+    <!-- DASHBOARD CARDS -->
+    <div class="details-grid">
+
+      <div class="card">
+        <span>Domain</span>
+        <strong id="domain">Loading...</strong>
+      </div>
+
+      <div class="card">
+        <span>Category</span>
+        <strong id="category">Loading...</strong>
+      </div>
+
+      <div class="card">
+        <span>IP Address</span>
+        <strong id="ip">Loading...</strong>
+      </div>
+
+      <div class="card">
+        <span>Policy</span>
+        <strong id="policy">Loading...</strong>
+      </div>
+
+      <div class="card full">
+        <span>Date</span>
+        <strong id="date"></strong>
+      </div>
+
     </div>
 
     <div class="actions">
@@ -207,7 +262,6 @@
       <a href="#" onclick="history.back()" class="btn btn-secondary">Go Back</a>
     </div>
 
-    <!-- NEW: Contact Section -->
     <div class="contact">
       <p><strong>Contact IT Support</strong></p>
       <p>
@@ -254,14 +308,11 @@
     document.getElementById("policy").innerText = policy;
     document.getElementById("date").innerText = new Date().toLocaleString();
 
-    // Email config
     const email = "itops@coveredconnections.com";
 
-    // Populate visible email link
     document.getElementById("emailLink").innerText = email;
     document.getElementById("emailLink").href = `mailto:${email}`;
 
-    // Request button mailto
     const subject = encodeURIComponent("Access Request: " + domain);
 
     const body = encodeURIComponent(
