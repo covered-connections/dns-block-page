@@ -142,6 +142,18 @@
   </style>
 </head>
 
+<script>
+      function goBack() {
+          if (document.referrer) {
+              // Go back to the previous page if available
+              window.location.href = document.referrer;
+          } else {
+              // Fallback to a safe page (like homepage)
+              window.location.href = "https://www.coveredconnections.com";
+          }
+      }
+</script>
+  
 <body>
 
   <div class="header">
@@ -162,17 +174,6 @@
     <div class="actions">
       <a id="requestLink" class="btn btn-primary">Request Access</a>
       <a href="#" onclick="goBack()" class="btn btn-secondary">Go Back</a>
-      <script>
-      function goBack() {
-          if (document.referrer) {
-              // Go back to the previous page if available
-              window.location.href = document.referrer;
-          } else {
-              // Fallback to a safe page (like homepage)
-              window.location.href = "https://www.coveredconnections.com";
-          }
-      }
-      </script>
     </div>
 
     <!-- CONTACT MOVED UP -->
